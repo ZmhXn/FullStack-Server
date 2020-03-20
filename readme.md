@@ -48,15 +48,9 @@ module.exports = Models;
 如：
 app.js
 var index = require('./routes/index');
-var users = require('./routes/users');
-var goods = require('./routes/goods');
-var square = require('./routes/square');
 var news = require('./routes/news');
 
 app.use('/', index);
-app.use('/users', users);
-app.use('/goods',goods)
-app.use('/square',square)
 app.use('/news',news)
 
 这里就定义了 接口的一级路径，
@@ -124,7 +118,7 @@ for (var i = start; i <= end; i++) {
         i = '0' + i
     }
     numberList.push({
-        number: '85219' + i,
+        number: '138' + i,
         type: 0,
         userNumber: ''
     })
@@ -170,8 +164,8 @@ Numbers.aggregate([
 mongoose 批量更新
 Model.updateMany()
 示例：
-router.post('/releaseNumber', function (req, res, next) {
-    Numbers.find({
+router.post('/details', function (req, res, next) {
+    News.find({
         type: 1
     }).updateMany({
         type: 0
@@ -185,33 +179,21 @@ mongoose 查找并更新一条数据
 Model.findOneAndUpdate()   [文档地址](https://mongoosejs.com/docs/api.html#model_Model.findOneAndUpdate)
 示例
 
-Numbers.findOneAndUpdate({
-    number: number,
-    type: 0
-},{
-    type: 1,
-    userNumber: userNumber
+ News.findOneAndUpdate({
+    _id: req.body.id
 }, {
-    new: true   //默认false 返回的是查询的数据  如果设置为true 返回的为更新后的数据
-}).exec((err, doc) => {
+    read_num: read_num 
+}, { new: true }).exec((err, doc) => { //new属性true返回修改后的document；false返回原始数据
     if (err) {
         res.json({
             status: 1,
-            message: '抢号失败'
+            message: "获取文章信息失败"
         })
     }
-    else if (!doc) {
-        res.json({
-            status: 1,
-            message: '你选择号码已被抢'
-        })
-    }
-    else {
-        res.json({
-            status: 0,
-            message: '恭喜你，抢号成功',
-            number: doc
-        })
-    }
+    res.json({
+        status: 0,
+        message: '获取文章信息成功',
+        detailList: doc
+    })
 })
 ```
