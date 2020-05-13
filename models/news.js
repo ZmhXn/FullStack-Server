@@ -10,6 +10,7 @@ const newSchema = new Schema({
     "praise_num": Number,
     "read_num": Number,
     "mes_num": Number,
+    "user_id": { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 })
 
 module.exports = mongoose.model('New',newSchema)
