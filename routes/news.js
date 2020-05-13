@@ -10,10 +10,11 @@ router.post("/", function (req, res, next) {
 //查询整个博客的文章
 router.post('/queryNews', function (req, res, next) {
     let page = req.body.page,
-    pageSize = req.body.pageSize
+    pageSize = req.body.pageSize,
+    user_id = req.body.user_id
     // 获取数据条数
-    News.count({}, (err, count) => { //查询出结果返回
-        News.find().skip((page - 1) * pageSize).limit(pageSize)
+    News.count({user_id}).populate('user_id').exec((err, count) => { //查询出结果返回
+        News.find({ user_id }).populate('user_id').skip((page - 1) * pageSize).limit(pageSize)
         .exec((err, doc) => {
             if (err) {
                 res.json({
@@ -22,10 +23,16 @@ router.post('/queryNews', function (req, res, next) {
                 })
             }
             else {
+                let newsList = []
+                doc.forEach(item => {
+                    item.user_id = {}
+                    newsList.unshift(item)
+                })
+               
                 res.json({
                     status: 0,
                     totalCount: count,
-                    newsList: doc
+                    newsList
                 })
             }
         })
@@ -42,6 +49,8 @@ router.post('/addArtical', (req, res, next) => {
             "praise_num": 0,
             "read_num": 0,
             "mes_num": 0,
+            "user_id": req.body.user_id,
+            "introduce": '牛逼'
         }
     ).save(err => {
         if (err) {

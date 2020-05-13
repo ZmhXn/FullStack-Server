@@ -7,6 +7,7 @@ var chinaTime = require('china-time');
 var session = require('express-session');
 
 var index = require('./routes/index');
+var users = require('./routes/users');
 var news = require('./routes/news');
 var comments = require('./routes/comments');
 
@@ -31,6 +32,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/users', users) //用户信息
 app.use('/news', news) //文章列表
 app.use('/acticle', comments) //评论留言
 
