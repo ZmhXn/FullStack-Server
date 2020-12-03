@@ -13,7 +13,7 @@ router.post('/queryNews', function (req, res, next) {
     pageSize = req.body.pageSize,
     user_id = req.body.user_id
     // 获取数据条数
-    News.count({user_id}).populate('user_id').exec((err, count) => { //查询出结果返回
+    News.count({ user_id }).populate('user_id').exec((err, count) => { //查询出结果返回
         News.find({ user_id }).populate('user_id').skip((page - 1) * pageSize).limit(pageSize)
         .exec((err, doc) => {
             if (err) {
